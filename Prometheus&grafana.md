@@ -1,64 +1,89 @@
- ==========================================
- Prometheus + Grafana Setup (Kubernetes)
- ==========================================
+# Prometheus + Grafana Setup (Kubernetes)
 
-============================
-install Helm directly
-===========================
+---
 
-1. curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 -o get_helm.sh
+## Install Helm Directly
 
-2. chmod 700 get_helm.sh
+```bash
+curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 -o get_helm.sh
+chmod 700 get_helm.sh
+./get_helm.sh
+helm --version
+```
 
-3. ./get_helm.sh
- 
-4. helm --version
-===============================================================================
-INSTALL THE CURL COMMAND
-======================================================
+---
+
+## Install the Curl Command
+
+```bash
 yum install -y curl
+```
 
-======================================================================
-Add the Prometheus Helm repository
-=====================================================================
+---
 
-1. helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+## Add the Prometheus Helm Repository
 
-2. helm repo update
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+```
 
-3.  Create a monitoring namespace
+---
 
-4.  kubectl create namespace monitoring
+## Create a Monitoring Namespace
 
-5. Install Prometheus and Grafana
+```bash
+kubectl create namespace monitoring
+```
 
-6. helm install monitoring prometheus-community/kube-prometheus-stack \
+---
+
+## Install Prometheus and Grafana
+
+```bash
+helm install monitoring prometheus-community/kube-prometheus-stack \
   --namespace monitoring
+```
 
-7. Check installation
+---
 
-    kubectl get pods -n monitoring
-    kubectl get svc -n monitoring
-8. Get Grafana password
+## Check Installation
 
+```bash
+kubectl get pods -n monitoring
+kubectl get svc -n monitoring
+```
+
+---
+
+## Get Grafana Password
+
+```bash
 kubectl get secret monitoring-grafana \
   -n monitoring \
   -o jsonpath="{.data.admin-password}" | base64 -d
+```
 
-9. Expose Grafana using NodePort
+---
 
- kubectl patch svc monitoring-grafana \
+## Expose Grafana using NodePort
+
+```bash
+kubectl patch svc monitoring-grafana \
   -n monitoring \
   -p '{"spec":{"type":"NodePort"}}'
 
-  kubectl get svc monitoring-grafana -n monitoring
+kubectl get svc monitoring-grafana -n monitoring
+```
 
+---
 
-10. Access Prometheus
+## Access Prometheus
 
+```bash
 kubectl patch svc monitoring-kube-prometheus-prometheus \
   -n monitoring \
   -p '{"spec":{"type":"NodePort"}}'
 
 kubectl get svc monitoring-kube-prometheus-prometheus -n monitoring
-
+```
