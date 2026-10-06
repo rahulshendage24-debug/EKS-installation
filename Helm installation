@@ -56,8 +56,9 @@ kubectl get secret monitoring-grafana \
 
 10. Access Prometheus
 
-kubectl port-forward svc/monitoring-kube-prometheus-prometheus \
-  9090:9090 -n monitoring
+kubectl patch svc monitoring-kube-prometheus-prometheus \
+  -n monitoring \
+  -p '{"spec":{"type":"NodePort"}}'
 
-http://<SERVER-IP>:9090
+kubectl get svc monitoring-kube-prometheus-prometheus -n monitoring
 
