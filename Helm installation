@@ -1,0 +1,60 @@
+ ==========================================
+ Prometheus + Grafana Setup (Kubernetes)
+ ==========================================
+
+============================
+install Helm directly
+===========================
+
+1. curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 -o get_helm.sh
+
+2. chmod 700 get_helm.sh
+
+3. ./get_helm.sh
+ 
+4. helm --version
+===============================================================================
+INSTALL THE CURL COMMAND
+======================================================
+yum install -y curl
+
+======================================================================
+Add the Prometheus Helm repository
+=====================================================================
+
+1. helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+2. helm repo update
+
+3.  Create a monitoring namespace
+
+4.  kubectl create namespace monitoring
+
+5. Install Prometheus and Grafana
+
+6. helm install monitoring prometheus-community/kube-prometheus-stack \
+  --namespace monitoring
+
+7. Check installation
+
+    kubectl get pods -n monitoring
+    kubectl get svc -n monitoring
+8. Get Grafana password
+
+kubectl get secret monitoring-grafana \
+  -n monitoring \
+  -o jsonpath="{.data.admin-password}" | base64 -d
+
+9. Access Grafana
+
+kubectl port-forward svc/monitoring-grafana 3000:80 -n monitoring
+
+http://<SERVER-IP>:3000
+
+10. Access Prometheus
+
+kubectl port-forward svc/monitoring-kube-prometheus-prometheus \
+  9090:9090 -n monitoring
+
+http://<SERVER-IP>:9090
+
