@@ -45,11 +45,14 @@ kubectl get secret monitoring-grafana \
   -n monitoring \
   -o jsonpath="{.data.admin-password}" | base64 -d
 
-9. Access Grafana
+9. Expose Grafana using NodePort
 
-kubectl port-forward svc/monitoring-grafana 3000:80 -n monitoring
+ kubectl patch svc monitoring-grafana \
+  -n monitoring \
+  -p '{"spec":{"type":"NodePort"}}'
 
-http://<SERVER-IP>:3000
+  kubectl get svc monitoring-grafana -n monitoring
+
 
 10. Access Prometheus
 
